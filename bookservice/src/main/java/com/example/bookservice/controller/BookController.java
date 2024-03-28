@@ -3,8 +3,8 @@ package com.example.bookservice.controller;
 import com.example.bookservice.model.Book;
 import com.example.bookservice.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,13 +25,11 @@ public class BookController {
         return bookService.getAllBooks();
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get book by ID")
-    public Book getBookById(
-            @Parameter(description = "Book ID", required = true) @PathVariable Long id) {
-        return bookService.getBookById(id);
+    @GetMapping("/{title}")
+    @Operation(summary = "Get book by title")
+    public ResponseEntity<?> getBookByTitle(@PathVariable String title) {
+        return bookService.getBookByTitle(title);
     }
-
     @PostMapping("/add-book")
     @Operation(summary = "Add a new book")
     public Book addBook(

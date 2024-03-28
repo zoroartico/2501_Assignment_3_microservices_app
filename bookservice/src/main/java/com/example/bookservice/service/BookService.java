@@ -3,6 +3,7 @@ package com.example.bookservice.service;
 import com.example.bookservice.model.Book;
 import com.example.bookservice.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,8 +21,13 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Book getBookById(Long id) {
-        return bookRepository.getBookById(id);
+    public ResponseEntity<?> getBookByTitle(String title) {
+        Book book = bookRepository.findByTitleIgnoreCase(title);
+        if (book != null) {
+            return ResponseEntity.ok(book);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     public Book addBook(Book book) {
