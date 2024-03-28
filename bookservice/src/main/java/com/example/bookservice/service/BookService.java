@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
@@ -30,15 +31,49 @@ public class BookService {
         }
     }
 
-    public Book addBook(Book book) {
+
+    public ResponseEntity<?> addBook(Book book) {
         //check if the book title is empty
         if (book.getTitle() == null || book.getTitle().isEmpty()) {
-            throw new IllegalArgumentException("Title cannot be blank");
+            return ResponseEntity.notFound().build();
         }
         //check if the book author is empty
         if (book.getAuthor() == null || book.getAuthor().isEmpty()) {
-            throw new IllegalArgumentException("Author cannot be blank");
+            return ResponseEntity.notFound().build();
         }
-        return bookRepository.save(book);
+        bookRepository.save(book);
+        return ResponseEntity.ok("Book Saved: \n"+ book);
+    }
+
+    public ResponseEntity<?> updateBook(int id, Book updatedBook) {
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()) {
+            if (updatedBook.getTitle() == null || updatedBook.getTitle().isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            //check if the book author is empty
+            if (updatedBook.getAuthor() == null || updatedBook.getAuthor().isEmpty()) {
+                return ResponseEntity.notFound().build();
+            }
+            //set new book values
+            Book existingBook = book.get();
+            existingBook.setTitle(updatedBook.getTitle());
+            existingBook.setAuthor(updatedBook.getAuthor());
+            bookRepository.save(existingBook);
+
+            return ResponseEntity.ok("Book Update: \n"+existingBook);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<?> deleteBook(int id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isPresent()) {
+            bookRepository.deleteById(id);
+            return ResponseEntity.ok("Book Deleted");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

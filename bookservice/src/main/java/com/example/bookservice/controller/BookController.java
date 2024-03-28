@@ -30,10 +30,23 @@ public class BookController {
     public ResponseEntity<?> getBookByTitle(@PathVariable String title) {
         return bookService.getBookByTitle(title);
     }
-    @PostMapping("/add-book")
+    
+    @PostMapping("/add")
     @Operation(summary = "Add a new book")
-    public Book addBook(
+    public ResponseEntity<?> addBook(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Book details", required = true) @RequestBody Book book) {
         return bookService.addBook(book);
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary="Update Book by id")
+    public ResponseEntity<?> updateBook(@PathVariable int id, @RequestBody Book updatedBook){
+        return bookService.updateBook(id,updatedBook);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary="Delete Book by id")
+    public ResponseEntity<?> updateBook(@PathVariable int id){
+        return bookService.deleteBook(id);
     }
 }

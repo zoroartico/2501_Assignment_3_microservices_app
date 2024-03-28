@@ -1,6 +1,5 @@
 package com.example.orderservice.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,10 +18,10 @@ public class OrderService {
         String bookDetails = restTemplate.getForObject(bookServiceUrl, String.class);
         System.out.println("bookDetails: " + bookDetails);
         if (bookDetails == null) {
-            return new ResponseEntity<>("Book Not found!", HttpStatus.NOT_FOUND);
+            return ResponseEntity.badRequest().body("Book Not found!");
         }
         System.out.println("Book found!");
-        return new ResponseEntity<>("Order placed for Book:\n"+bookDetails, HttpStatus.OK);
+        return ResponseEntity.ok("Order placed for Book:\n"+bookDetails);
     }
 }
 
